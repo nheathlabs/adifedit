@@ -433,7 +433,8 @@ through the same checks, so a saved input stays fixed on every
    README's [Windows build](README.md#windows-build)).
 5. Build the Debian package from a release build: `cmake --preset release &&
    cmake --build --preset release && (cd build/release && cpack)`
-   writes `build/release/adifedit_x.y.z_amd64.deb`.
+   writes `build/release/adifedit_x.y.z_amd64.deb`. CI's `deb` job does the
+   same and lints it, so the pushed commit's artifact can be attached.
 6. Push the tag, then create a GitHub release for it. Attach:
    - the zip and the `.deb`, plus `sha256sum` output for them;
    - the `-sources/` folder, as one archive.

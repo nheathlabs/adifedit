@@ -11,8 +11,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
 adifedit began as a way to get to know `Claude Code`.
 
 It isn't meant to be "the perfect way" to handle ADIF logs, nor perfect C
-or GTK. It's my experiment in building software with AI and as little
-hand-written code as possible, to get a tool I'll actually use. That part
+or GTK. It's my experiment in using AI to build a tool I'll actually use,
+with as little hand-written code as possible. That part
 of the experiment is over, so feel free to contribute — with AI, or by
 sheer human will and ingenuity.
 

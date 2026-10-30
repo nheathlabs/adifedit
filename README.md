@@ -8,11 +8,13 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 ## My experiment with Claude Code.
 
-adifedit began as a way to get to know `Claude Code`. My goal was to build
-something I genuinely needed, and then use it for real.
+adifedit began as a way to get to know `Claude Code`.
 
-It isn't meant to be "the perfect way" to handle ADIF logs. It's meant to
-solve the problems I have with mine, and I use it myself.
+It isn't meant to be "the perfect way" to handle ADIF logs, nor perfect C
+or GTK. It's my experiment in building software with AI and as little
+hand-written code as possible, to get a tool I'll actually use. That part
+of the experiment is over, so feel free to contribute — with AI, or by
+sheer human will and ingenuity.
 
 As with all FOSS, the GPL's warning really is the case:
 

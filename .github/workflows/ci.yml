@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trust the checkout (container runs as root)
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build
@@ -67,7 +67,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trust the checkout (container runs as root)
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build
@@ -86,7 +86,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trust the checkout (container runs as root)
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build
@@ -98,7 +98,7 @@ jobs:
             -artifact_prefix=build/fuzz/artifacts/ build/fuzz/corpus tests/fuzz_corpus
       - name: Keep any failing input
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: fuzz-artifacts
           path: build/fuzz/artifacts/
@@ -107,10 +107,10 @@ jobs:
     name: Windows zip (MinGW cross-build)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build the zip in the MinGW container
         run: scripts/windows-podman.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: adifedit-windows-x86_64
           path: build/windows/adifedit-*-windows-x86_64.zip

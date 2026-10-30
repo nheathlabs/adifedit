@@ -10,8 +10,8 @@ body:
     attributes:
       value: |
         Thanks for reporting. A crash or memory error from a malformed file
-        may be a security issue - please see SECURITY.md and report those
-        privately instead.
+        is welcome here too - see SECURITY.md. A pull request with a fix is
+        even better.
   - type: input
     id: version
     attributes:

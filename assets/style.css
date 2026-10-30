@@ -1,0 +1,45 @@
+/*
+ * adifedit - a GTK4 viewer and editor for ham radio ADIF logs.
+ * Copyright (C) 2026 Nicholas Heath
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ * The app's own styling, bundled as a GResource and installed for the
+ * display once at startup (adifedit_app_startup).
+ */
+
+/* A cell whose declared length didn't match its data when the file
+ * loaded, so the parser fitted it (adif_row_is_repaired): a pale yellow
+ * with dark text, legible in light and dark themes. Before the search
+ * match so its stronger yellow wins on a cell that is both. */
+.adif-repaired,
+.adif-repaired .adif-cell-editor,
+.adif-repaired .adif-cell-editor > text {
+    background-color: rgb(255, 241, 168);
+    background-image: none;
+    color: rgb(20, 20, 20);
+    caret-color: rgb(20, 20, 20);
+}
+
+/* The current-search-match cell: a fixed warm colour with dark text,
+ * legible in light and dark themes. */
+.adif-search-match,
+.adif-search-match .adif-cell-editor,
+.adif-search-match .adif-cell-editor > text {
+    background-color: rgb(246, 211, 45);
+    background-image: none;
+    color: rgb(20, 20, 20);
+    caret-color: rgb(20, 20, 20);
+}
+
+/* The keyboard cursor: the focused cell (not being edited) in the
+ * selected row. */
+.adif-cell:focus-visible {
+    outline: 2px solid @theme_selected_bg_color;
+    outline-offset: -2px;
+}
+
+/* The empty-state app-icon watermark: faint, with a soft drop shadow so
+ * it still reads against a light background. */
+.adif-empty-watermark {
+    filter: drop-shadow(0 3px 9px rgba(0, 0, 0, 0.55)) opacity(0.2);
+}

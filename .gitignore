@@ -1,0 +1,23 @@
+# CMake build trees (presets use build/debug, build/release)
+/build*/
+
+# Compile database, when generated or symlinked outside a build tree
+/compile_commands.json
+
+# Staged installs (README's DESTDIR packaging example)
+/pkgroot/
+
+# Editor / language-server caches
+/.cache/
+/.vscode/
+/.clangd
+*.swp
+*~
+
+
+# libFuzzer output, when run from the source root (CONTRIBUTING.md "Fuzzing")
+/fuzz-*.log
+/crash-*
+/leak-*
+/oom-*
+/timeout-*

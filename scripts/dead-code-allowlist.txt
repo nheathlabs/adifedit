@@ -1,0 +1,13 @@
+# Exported functions that scripts/check-dead-code.sh should not report.
+# One name per line; say why. Only for deliberate test-only API - a
+# function nothing calls at all should be deleted, not listed here.
+
+# The synchronous load - the app uses the incremental load_parse_begin()
+# path, the tests use this one (see adif_document.h).
+adif_document_load_parse
+
+# The synchronous whole-column writes - the app's Fill Column and batch
+# stamp use the incremental column_write_begin()/step()/finish() path,
+# the tests use these.
+adif_document_fill_column
+adif_document_stamp_column

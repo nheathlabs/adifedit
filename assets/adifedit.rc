@@ -1,0 +1,11 @@
+/*
+ * adifedit - a GTK4 viewer and editor for ham radio ADIF logs.
+ * Copyright (C) 2026 Nicholas Heath
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/* Windows resources: the icon Explorer and the taskbar show for
+ * adifedit.exe. adifedit.ico was made from the PNGs beside it with
+ *   icotool -c -o adifedit.ico adifedit-{16,24,32,48,64,128}.png -r adifedit-256.png */
+
+1 ICON "adifedit.ico"

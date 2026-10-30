@@ -1,0 +1,29 @@
+# Removes every file recorded in install_manifest.txt (written by
+# `cmake --install`). Generated from cmake_uninstall.cmake.in.
+#
+# Shared directories (e.g. share/icons/hicolor/*/apps) are intentionally
+# left in place, and the icon cache is not refreshed - run
+# `gtk4-update-icon-cache -f -t <datadir>/icons/hicolor` if you want the
+# removed icons dropped from the cache immediately.
+
+set(manifest "@CMAKE_BINARY_DIR@/install_manifest.txt")
+
+if(NOT EXISTS "${manifest}")
+    message(FATAL_ERROR
+        "Cannot find install manifest: ${manifest}\n"
+        "Run `cmake --install build` (or `make install`) first.")
+endif()
+
+file(STRINGS "${manifest}" files)
+foreach(file ${files})
+    set(path "$ENV{DESTDIR}${file}")
+    if(IS_SYMLINK "${path}" OR EXISTS "${path}")
+        message(STATUS "Removing ${path}")
+        file(REMOVE "${path}")
+        if(EXISTS "${path}")
+            message(FATAL_ERROR "Failed to remove ${path}")
+        endif()
+    else()
+        message(STATUS "Not installed: ${path}")
+    endif()
+endforeach()

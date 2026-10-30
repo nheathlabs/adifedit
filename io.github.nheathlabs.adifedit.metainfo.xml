@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  adifedit - a GTK4 viewer and editor for ham radio ADIF logs.
+  Copyright (C) 2026 Nicholas Heath
+  SPDX-License-Identifier: GPL-3.0-or-later
+
+  AppStream metadata (software centres, Flathub). Installed to
+  share/metainfo/; check with `appstreamcli validate`. The metadata itself
+  is CC0-1.0, as AppStream asks. Add a <release> per version, matching
+  CHANGELOG.md.
+-->
+<component type="desktop-application">
+  <id>io.github.nheathlabs.adifedit</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <name>adifedit</name>
+  <summary>View and edit ham radio ADIF logs</summary>
+  <developer id="io.github.nheathlabs">
+    <name>Nicholas Heath</name>
+  </developer>
+
+  <description>
+    <p>
+      adifedit opens an ADIF log (.adi / .adif), shows every record as a
+      row and every field as a column, lets you edit it like a spreadsheet,
+      and writes it back as plain ADIF.
+    </p>
+    <p>
+      It handles the jobs a logger makes awkward: fixing a wrong band on
+      forty QSOs, adding fields such as MY_RIG or MY_ANTENNA to every
+      record, dropping junk columns an importer created, or just seeing
+      what is actually in the file.
+    </p>
+    <ul>
+      <li>Edit any cell in place; insert, delete and fill rows and columns</li>
+      <li>Undo and redo everything</li>
+      <li>Find and Find and Replace across cell values</li>
+      <li>Batch Stamp: write the same set of fields into every record from a reusable template</li>
+      <li>Opens files with mismatched field lengths on a best-effort basis, highlights what it repaired, and won't save over the original</li>
+      <li>Asks before saving over a log that another program, such as a logger, has changed since it was opened</li>
+    </ul>
+    <p>
+      It is deliberately not a logger: no database, no account, no network.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">io.github.nheathlabs.adifedit.desktop</launchable>
+  <provides>
+    <binary>adifedit</binary>
+    <mediatype>application/x-adif</mediatype>
+  </provides>
+
+  <url type="homepage">https://github.com/nheathlabs/adifedit</url>
+  <url type="bugtracker">https://github.com/nheathlabs/adifedit/issues</url>
+  <url type="vcs-browser">https://github.com/nheathlabs/adifedit</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>A loaded log as an editable grid</caption>
+      <image>https://raw.githubusercontent.com/nheathlabs/adifedit/master/docs/images/main-window.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Find and Replace across cell values</caption>
+      <image>https://raw.githubusercontent.com/nheathlabs/adifedit/master/docs/images/find-replace.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Batch Stamp, writing fields into every record</caption>
+      <image>https://raw.githubusercontent.com/nheathlabs/adifedit/master/docs/images/batch-stamp.png</image>
+    </screenshot>
+  </screenshots>
+
+  <categories>
+    <category>Network</category>
+    <category>HamRadio</category>
+  </categories>
+  <keywords>
+    <keyword>ADIF</keyword>
+    <keyword>ham radio</keyword>
+    <keyword>amateur radio</keyword>
+    <keyword>log</keyword>
+    <keyword>QSO</keyword>
+  </keywords>
+
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </supports>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="0.0.1" date="2026-10-15">
+      <description>
+        <p>First public release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

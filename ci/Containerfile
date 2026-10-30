@@ -1,0 +1,17 @@
+# adifedit - a GTK4 viewer and editor for ham radio ADIF logs.
+# Copyright (C) 2026 Nicholas Heath
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# The Windows cross-build environment: Fedora and its MinGW GTK 4.
+# scripts/windows-podman.sh builds and runs it; the build itself is
+# scripts/build-windows.sh.
+
+FROM registry.fedoraproject.org/fedora:latest
+
+# tsflags= clears the image's default "nodocs": a few packages (bzip2,
+# win-iconv) keep their licence text with their docs, and the bundle's
+# share/licenses/ needs it (scripts/build-windows.sh, copy_licence()).
+COPY windows-packages.txt /tmp/windows-packages.txt
+RUN dnf -y install --setopt=tsflags= $(grep -v '^#' /tmp/windows-packages.txt) \
+    && dnf clean all \
+    && rm /tmp/windows-packages.txt

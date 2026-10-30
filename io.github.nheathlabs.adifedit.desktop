@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=adifedit
+GenericName=ADIF Log Editor
+Comment=View and edit ham radio ADIF logs
+Exec=adifedit %F
+Icon=io.github.nheathlabs.adifedit
+Terminal=false
+Categories=Network;HamRadio;
+Keywords=ADIF;ham;radio;amateur;log;QSO;
+MimeType=application/x-adif;
+StartupNotify=true

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#2e3436">
+    <!-- stub coming down from the top-left, turning right -->
+    <rect x="2.2" y="3.2" width="3" height="7" rx="1.2"/>
+    <rect x="2.2" y="7.3" width="9.8" height="3" rx="1.2"/>
+    <!-- arrowhead, pointing right -->
+    <path d="M15 8.8L10 5.6v6.4z"/>
+  </g>
+</svg>

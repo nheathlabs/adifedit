@@ -1,0 +1,8 @@
+# Tests inherit the project config, minus the function-size checks: a
+# test is a long, flat list of g_assert_*() calls, and every one of those
+# macros adds branches that cognitive complexity counts.
+---
+InheritParentConfig: true
+Checks: >
+  -readability-function-cognitive-complexity,
+  -readability-function-size

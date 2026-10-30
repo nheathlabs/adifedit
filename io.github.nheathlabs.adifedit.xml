@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  adifedit - a GTK4 viewer and editor for ham radio ADIF logs.
+  Copyright (C) 2026 Nicholas Heath
+  SPDX-License-Identifier: GPL-3.0-or-later
+
+  Shared MIME type for ADIF (Amateur Data Interchange Format) logs.
+  Installed to share/mime/packages/; run update-mime-database afterwards.
+-->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-adif">
+    <comment>ADIF amateur radio log</comment>
+    <sub-class-of type="text/plain"/>
+    <icon name="io.github.nheathlabs.adifedit"/>
+    <generic-icon name="text-x-generic"/>
+    <glob pattern="*.adi"/>
+    <glob pattern="*.adif"/>
+    <magic priority="40">
+      <match type="string" value="&lt;ADIF_VER:" offset="0:256"/>
+      <match type="string" value="&lt;adif_ver:" offset="0:256"/>
+      <match type="string" value="&lt;EOH&gt;" offset="0:4096"/>
+      <match type="string" value="&lt;eoh&gt;" offset="0:4096"/>
+    </magic>
+  </mime-type>
+</mime-info>

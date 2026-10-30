@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#2e3436">
+    <!-- folder back, with the tab -->
+    <path d="M2 3.4h3.4l1 1.3h5.5a1.2 1.2 0 0 1 1.2 1.2V8H2z"/>
+    <!-- open front, tilted forward (the gap above it is the folder mouth) -->
+    <path d="M1 8.7h13.7l-1.7 4.4a1.2 1.2 0 0 1-1.1.8H3.3a1.2 1.2 0 0 1-1.1-.8z"/>
+  </g>
+</svg>

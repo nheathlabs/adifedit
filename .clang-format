@@ -1,0 +1,70 @@
+# adifedit C style. See CONTRIBUTING notes for the conventions clang-format
+# cannot express (ownership comments, module seams, GObject boilerplate).
+# Formatting: clang-format >= 16.
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
+IndentWidth: 4
+ContinuationIndentWidth: 4
+ColumnLimit: 100
+UseTab: Never
+
+# Braces attach; control keywords take a space, calls do not.
+BreakBeforeBraces: Attach
+SpaceBeforeParens: ControlStatements
+IndentCaseLabels: true
+
+# Everything stays multi-line and braced - no collapsed one-liners.
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+InsertBraces: true
+
+# Pointers bind to the name: `char *p`.
+PointerAlignment: Right
+DerivePointerAlignment: false
+
+# Wrapped call arguments align under the open paren; `&&` / `||` start
+# the continuation line.
+AlignAfterOpenBracket: Align
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBinaryOperators: NonAssignment
+PenaltyBreakAssignment: 120
+
+# Braced initialiser lists keep inner spacing: `{ a, b }`, not `{a, b}`.
+Cpp11BracedListStyle: false
+
+# (AlignArrayOfStructures is buggy with designated inits - leave tables as-is.)
+AlignArrayOfStructures: None
+
+# We do not vertically align runs of assignments or declarations.
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+AlignConsecutiveMacros: None
+
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+SpacesBeforeTrailingComments: 3
+ReflowComments: false
+# Trailing comments are hand-aligned; don't reflow their column.
+AlignTrailingComments:
+  Kind: Leave
+
+# Include order: the unit's own header (or its *_priv.h), then C/system
+# <foo.h>, then namespaced library headers <glib/...> / <gtk/...>, then
+# the remaining project "..." headers - each group blank-line separated.
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^"[a-z_]+_priv\.h"$'
+    Priority: 1
+  - Regex: '^<[^/.]+\.h>$'
+    Priority: 2
+  - Regex: '^<.*>$'
+    Priority: 3
+  - Regex: '^".*"$'
+    Priority: 4

@@ -1,0 +1,57 @@
+# adifedit - a GTK4 viewer and editor for ham radio ADIF logs.
+# Copyright (C) 2026 Nicholas Heath
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Bug report
+description: Something adifedit does wrong - a crash, a misread file, a bad save.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. A crash or memory error from a malformed file
+        may be a security issue - please see SECURITY.md and report those
+        privately instead.
+  - type: input
+    id: version
+    attributes:
+      label: adifedit version
+      description: From Help → About, or `adifedit --version` (it includes the git hash).
+      placeholder: "adifedit 0.0.1 (git abc1234)"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: Linux distribution and version, or Windows version.
+      placeholder: "Ubuntu 24.04 / Windows 11"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+      placeholder: |
+        1. Open a log exported from ...
+        2. ...
+        Expected: ...
+        Got: ...
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: ADIF sample (optional)
+      description: |
+        The smallest part of the file that shows the problem. Logs hold
+        names, addresses and locations - replace any personal data before
+        pasting.
+      render: text
+  - type: textarea
+    id: output
+    attributes:
+      label: Terminal output (optional)
+      description: Anything adifedit printed, if you started it from a terminal.
+      render: text

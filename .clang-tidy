@@ -1,0 +1,80 @@
+# adifedit static analysis. Needs a compile database:
+#   cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+#   clang-tidy -p build src/*.c tests/*.c
+#
+# C only, GLib/GObject-friendly. Whole check groups are enabled and their
+# noisy members turned off individually, so a clang-tidy upgrade picks up
+# new checks in each group automatically. Findings are a triage backlog,
+# not a reformat - so WarningsAsErrors holds only the dead-code checks
+# (dead stores, unused parameters/declarations, unreachable code; see
+# CONTRIBUTING.md "Dead code"). ExtraArgs turns on clang's unreachable-
+# code warning even when the compile database comes from a GCC build.
+---
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-implicit-widening-of-multiplication-result,
+  -bugprone-assignment-in-if-condition,
+  -bugprone-multi-level-implicit-pointer-conversion,
+  cert-*,
+  -cert-err33-c,
+  concurrency-*,
+  clang-analyzer-*,
+  misc-*,
+  -misc-include-cleaner,
+  -misc-no-recursion,
+  -misc-use-anonymous-namespace,
+  readability-*,
+  -readability-magic-numbers,
+  -readability-identifier-length,
+  -readability-isolate-declaration,
+  -readability-avoid-nested-conditional-operator,
+  -readability-redundant-casting,
+  -readability-named-parameter,
+  -readability-uppercase-literal-suffix,
+  performance-*,
+  portability-restrict-system-includes,
+  clang-diagnostic-unreachable-code*,
+
+WarningsAsErrors: >
+  clang-analyzer-deadcode.*,
+  misc-unused-*,
+  clang-diagnostic-unreachable-code*
+ExtraArgs: ['-Wunreachable-code-aggressive']
+HeaderFilterRegex: '.*/(src|tests)/.*\.h$'
+FormatStyle: file
+
+CheckOptions:
+  # --- Function size, machine-checked (tests are exempt: tests/.clang-tidy) ---
+  # Cognitive complexity is the real measure; the line cap backs it up.
+  # Statement counts are left at the default because GLib's g_clear_*()
+  # macros inflate them - a plain finalize() would trip any useful limit.
+  readability-function-cognitive-complexity.Threshold: 25
+  readability-function-size.LineThreshold: 80
+
+  # --- Identifier conventions, machine-checked ---
+  readability-identifier-naming.FunctionCase: lower_case
+  readability-identifier-naming.ParameterCase: lower_case
+  readability-identifier-naming.MemberCase: lower_case
+  readability-identifier-naming.TypedefCase: CamelCase
+  readability-identifier-naming.EnumCase: CamelCase
+  readability-identifier-naming.UnionCase: CamelCase
+  readability-identifier-naming.EnumConstantCase: UPPER_CASE
+  readability-identifier-naming.MacroDefinitionCase: UPPER_CASE
+  # Type names are covered by TypedefCase (every type is typedef'd). Struct
+  # *tags* are left unchecked: GObject requires `struct _AdifDocument`
+  # (from G_DECLARE_FINAL_TYPE), which no case style accepts.
+  bugprone-reserved-identifier.AllowedIdentifiers: '_Adif[A-Za-z0-9]*'
+  cert-dcl37-c.AllowedIdentifiers: '_Adif[A-Za-z0-9]*'
+  cert-dcl51-cpp.AllowedIdentifiers: '_Adif[A-Za-z0-9]*'
+
+  # Always-braces (also enforced by clang-format InsertBraces).
+  readability-braces-around-statements.ShortStatementLines: 0
+
+  # Portability: our code stays on GLib/GIO so a Windows/MinGW build needs
+  # no porting pass. Allow everything except the POSIX-only headers - you
+  # can't reach open()/stat()/fork()/pthreads/sockets without one of
+  # these. Deliberate platform code gets a // NOLINT and an #ifdef G_OS_*.
+  # (See also src/portability_guard.h and scripts/check-portability.sh.)
+  portability-restrict-system-includes.Includes: '*,-unistd.h,-fcntl.h,-dirent.h,-poll.h,-termios.h,-libgen.h,-glob.h,-pwd.h,-grp.h,-pthread.h,-syslog.h,-sys/*,-netinet/*,-arpa/*,-net/*'

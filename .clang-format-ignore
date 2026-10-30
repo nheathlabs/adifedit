@@ -1,0 +1,2 @@
+# Force-included, pragma-heavy, deliberate include order - keep clang-format off it.
+src/portability_guard.h

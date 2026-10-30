@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#f1ecdc"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2f5f9"/>
+      <stop offset="0.45" stop-color="#b6c0cd"/>
+      <stop offset="1" stop-color="#67717f"/>
+    </linearGradient>
+    <linearGradient id="metalDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c7d0db"/>
+      <stop offset="1" stop-color="#4f5865"/>
+    </linearGradient>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#40454e"/>
+      <stop offset="1" stop-color="#15181d"/>
+    </linearGradient>
+    <radialGradient id="knob" cx="0.34" cy="0.28" r="0.85">
+      <stop offset="0" stop-color="#525761"/>
+      <stop offset="0.6" stop-color="#23262c"/>
+      <stop offset="1" stop-color="#0c0e11"/>
+    </radialGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#000000" flood-opacity="0.22"/>
+    </filter>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+  </defs>
+
+  <!-- ground contact shadow -->
+  <ellipse cx="262" cy="452" rx="180" ry="26" fill="#000000" opacity="0.18" filter="url(#blur)"/>
+
+  <!-- ===== Notepad paper ===== -->
+  <g transform="rotate(-5 256 256)" filter="url(#soft)">
+    <rect x="116" y="52" width="284" height="366" rx="12" fill="url(#paper)" stroke="#d9d2ba" stroke-width="2"/>
+
+    <!-- red margin rule -->
+    <line x1="158" y1="66" x2="158" y2="404" stroke="#e19a9a" stroke-width="3"/>
+
+    <!-- spiral binding: a pencil runs where the binding wire would -->
+    <g>
+      <!-- pencil (behind the rings, threaded like the wire) -->
+      <g transform="translate(519 0) scale(-1 1)">
+        <!-- eraser + ferrule -->
+        <rect x="110" y="33" width="15" height="14" rx="4" fill="#dd8f9e"/>
+        <rect x="123" y="33" width="14" height="14" fill="#c3c8d0"/>
+        <rect x="126" y="33" width="2" height="14" fill="#9aa0aa"/>
+        <rect x="132" y="33" width="2" height="14" fill="#9aa0aa"/>
+        <!-- painted body -->
+        <rect x="136" y="33" width="248" height="14" fill="#ecc044"/>
+        <rect x="136" y="34" width="248" height="4" rx="2" fill="#ffffff" opacity="0.30"/>
+        <rect x="136" y="44" width="248" height="3" fill="#000000" opacity="0.12"/>
+        <!-- sharpened wood -->
+        <path d="M384 33 L 384 47 L 409 40 Z" fill="#e2b978"/>
+        <path d="M384 33 L 384 40 L 409 40 Z" fill="#efd7ac"/>
+        <!-- graphite point -->
+        <path d="M400 36.5 L 400 43.5 L 409 40 Z" fill="#3a3d44"/>
+      </g>
+      <!-- binder rings -->
+      <g fill="#8b929c">
+        <rect x="140" y="30" width="11" height="40" rx="5.5"/>
+        <rect x="169" y="30" width="11" height="40" rx="5.5"/>
+        <rect x="198" y="30" width="11" height="40" rx="5.5"/>
+        <rect x="227" y="30" width="11" height="40" rx="5.5"/>
+        <rect x="256" y="30" width="11" height="40" rx="5.5"/>
+        <rect x="285" y="30" width="11" height="40" rx="5.5"/>
+        <rect x="314" y="30" width="11" height="40" rx="5.5"/>
+        <rect x="343" y="30" width="11" height="40" rx="5.5"/>
+        <rect x="372" y="30" width="11" height="40" rx="5.5"/>
+      </g>
+    </g>
+
+    <!-- vague "text" — solid bars, only a little different from the paper -->
+    <g fill="#adb7c6">
+      <rect x="176" y="104" width="196" height="12" rx="6"/>
+      <rect x="176" y="130" width="184" height="12" rx="6"/>
+      <rect x="176" y="156" width="200" height="12" rx="6"/>
+      <rect x="176" y="182" width="128" height="12" rx="6"/>
+
+      <rect x="176" y="222" width="198" height="12" rx="6"/>
+      <rect x="176" y="248" width="176" height="12" rx="6"/>
+      <rect x="176" y="274" width="192" height="12" rx="6"/>
+      <rect x="176" y="300" width="150" height="12" rx="6"/>
+
+      <rect x="176" y="340" width="188" height="12" rx="6"/>
+      <rect x="176" y="366" width="116" height="12" rx="6"/>
+    </g>
+  </g>
+
+  <!-- ===== Telegraph key (straight key) in front ===== -->
+  <g transform="translate(258 372) scale(1.16) translate(-258 -372)">
+    <!-- key's own shadow onto the paper -->
+    <ellipse cx="264" cy="412" rx="150" ry="24" fill="#000000" opacity="0.16" filter="url(#blur)"/>
+
+    <!-- base -->
+    <rect x="150" y="356" width="228" height="52" rx="13" fill="url(#base)"/>
+    <ellipse cx="182" cy="414" rx="15" ry="8" fill="#0c0e11"/>
+    <ellipse cx="346" cy="414" rx="15" ry="8" fill="#0c0e11"/>
+    <!-- base top highlight -->
+    <rect x="160" y="362" width="208" height="7" rx="3.5" fill="#5a616c" opacity="0.6"/>
+
+    <!-- terminal binding post (rear) -->
+    <circle cx="360" cy="372" r="9" fill="url(#metalDark)"/>
+    <!-- line-out wire -->
+    <path d="M363 378 C 395 400, 402 452, 452 470" fill="none" stroke="#1b1e23" stroke-width="7" stroke-linecap="round"/>
+
+    <!-- pivot / trunnion post -->
+    <rect x="300" y="316" width="30" height="52" rx="6" fill="url(#metal)"/>
+    <circle cx="315" cy="332" r="5" fill="#3c434d"/>
+
+    <!-- lever arm -->
+    <g transform="rotate(-6 250 330)">
+      <rect x="150" y="322" width="182" height="16" rx="8" fill="url(#metal)"/>
+      <rect x="152" y="324" width="178" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+    </g>
+
+    <!-- trunnion spring -->
+    <g stroke="#8b95a3" stroke-width="4" fill="none">
+      <path d="M262 350 q 10 -7 20 0 q 10 7 20 0"/>
+      <path d="M262 358 q 10 -7 20 0 q 10 7 20 0"/>
+      <path d="M262 366 q 10 -7 20 0 q 10 7 20 0"/>
+    </g>
+
+    <!-- adjustment screw / contact under arm -->
+    <rect x="238" y="330" width="10" height="30" rx="3" fill="url(#metalDark)"/>
+
+    <!-- knob assembly (front) -->
+    <ellipse cx="176" cy="330" rx="37" ry="11" fill="#26292f"/>
+    <rect x="169" y="308" width="14" height="22" rx="3" fill="url(#metal)"/>
+    <circle cx="176" cy="300" r="26" fill="url(#knob)"/>
+    <ellipse cx="167" cy="291" rx="9" ry="6" fill="#ffffff" opacity="0.20"/>
+  </g>
+</svg>

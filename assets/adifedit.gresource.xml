@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Bundled icons. Compiled into the binary so they resolve when running
+  straight from the build directory, without a system icon-theme install:
+    * the application icon (apps/io.github.nheathlabs.adifedit)
+    * the toolbar action icons (actions/adifedit-*) - open, save, and the
+      insert-row/column buttons, drawn to match each other
+
+  The prefix matches GtkApplication's resource base path (derived from the
+  application id "io.github.nheathlabs.adifedit"); GtkApplication adds
+  "<base>/icons" to the default icon theme as a hicolor theme root, so the
+  entries below must sit directly under it as <size>/<context>/<name> (no "hicolor/").
+
+  File paths are relative to assets/icons/hicolor (see --sourcedir in
+  CMakeLists).
+
+  The second resource is the app stylesheet, assets/style.css (found via
+  the second --sourcedir, assets/), loaded by adifedit_app_startup().
+-->
+<gresources>
+  <gresource prefix="/io/github/nheathlabs/adifedit/icons">
+    <file>scalable/apps/io.github.nheathlabs.adifedit.svg</file>
+    <file>16x16/apps/io.github.nheathlabs.adifedit.png</file>
+    <file>24x24/apps/io.github.nheathlabs.adifedit.png</file>
+    <file>32x32/apps/io.github.nheathlabs.adifedit.png</file>
+    <file>48x48/apps/io.github.nheathlabs.adifedit.png</file>
+    <file>64x64/apps/io.github.nheathlabs.adifedit.png</file>
+    <file>128x128/apps/io.github.nheathlabs.adifedit.png</file>
+    <file>256x256/apps/io.github.nheathlabs.adifedit.png</file>
+    <file>512x512/apps/io.github.nheathlabs.adifedit.png</file>
+    <file>scalable/actions/adifedit-open-symbolic.svg</file>
+    <file>scalable/actions/adifedit-undo-symbolic.svg</file>
+    <file>scalable/actions/adifedit-redo-symbolic.svg</file>
+    <file>scalable/actions/adifedit-save-symbolic.svg</file>
+    <file>scalable/actions/adifedit-insert-row-above-symbolic.svg</file>
+    <file>scalable/actions/adifedit-insert-row-below-symbolic.svg</file>
+    <file>scalable/actions/adifedit-insert-column-left-symbolic.svg</file>
+    <file>scalable/actions/adifedit-insert-column-right-symbolic.svg</file>
+  </gresource>
+  <gresource prefix="/io/github/nheathlabs/adifedit">
+    <file>style.css</file>
+  </gresource>
+</gresources>

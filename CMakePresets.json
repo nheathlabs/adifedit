@@ -1,0 +1,76 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "description": "No optimisation, full gdb info",
+      "binaryDir": "${sourceDir}/build/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "description": "-O3 + LTO, no debug info",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "asan",
+      "displayName": "Debug + AddressSanitizer/UBSan",
+      "description": "Debug build with ASan + UBSan, for running the tests under the sanitizers",
+      "binaryDir": "${sourceDir}/build/asan",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer"
+      }
+    },
+    {
+      "name": "fuzz",
+      "displayName": "libFuzzer (clang)",
+      "description": "The parser fuzz target (tests/fuzz_parser.c), clang + libFuzzer + ASan/UBSan",
+      "binaryDir": "${sourceDir}/build/fuzz",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_C_FLAGS": "-O1 -fsanitize=fuzzer-no-link,address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer",
+        "ADIFEDIT_FUZZ": "ON"
+      }
+    },
+    {
+      "name": "windows",
+      "displayName": "Windows (MinGW cross-build)",
+      "description": "64-bit Windows release, cross-compiled with Fedora's MinGW GTK 4 - run inside the ci/Containerfile image (scripts/windows-podman.sh)",
+      "binaryDir": "${sourceDir}/build/windows",
+      "generator": "Ninja",
+      "toolchainFile": "/usr/share/mingw/toolchain-mingw64.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "PKG_CONFIG_EXECUTABLE": "/usr/bin/x86_64-w64-mingw32-pkg-config"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "debug",   "configurePreset": "debug" },
+    { "name": "release", "configurePreset": "release" },
+    { "name": "asan",    "configurePreset": "asan" },
+    { "name": "fuzz",    "configurePreset": "fuzz", "targets": ["fuzz_parser"] },
+    { "name": "windows", "configurePreset": "windows" }
+  ],
+  "testPresets": [
+    {
+      "name": "asan",
+      "configurePreset": "asan",
+      "output": { "outputOnFailure": true },
+      "environment": {
+        "ASAN_OPTIONS": "abort_on_error=1:detect_leaks=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
+      }
+    }
+  ]
+}

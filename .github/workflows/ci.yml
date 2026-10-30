@@ -1,0 +1,116 @@
+# adifedit - a GTK4 viewer and editor for ham radio ADIF logs.
+# Copyright (C) 2026 Nicholas Heath
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# The pre-push checks from CONTRIBUTING.md, on every push and pull request.
+# The Linux jobs run in an Ubuntu 26.04 container so clang-format /
+# clang-tidy match the versions the tree is kept clean against.
+
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+  # Build and tool dependencies (the apt line of scripts/install-build-deps.sh,
+  # minus grim and podman, which CI doesn't use here).
+  APT_PACKAGES: >-
+    git build-essential gcc cmake pkg-config libgtk-4-dev libglib2.0-dev-bin
+    librsvg2-bin clang libclang-rt-dev clang-format clang-tidy shellcheck
+    appstream desktop-file-utils cage
+
+jobs:
+  linux:
+    name: Linux build, tests and checks
+    runs-on: ubuntu-latest
+    container: ubuntu:26.04
+    steps:
+      - name: Install dependencies
+        run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
+      - uses: actions/checkout@v4
+      - name: Trust the checkout (container runs as root)
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Build
+        run: cmake --preset debug && cmake --build --preset debug -j"$(nproc)"
+      - name: Test
+        env:
+          XDG_RUNTIME_DIR: /tmp/xdg-runtime
+        run: |
+          mkdir -p -m 700 "$XDG_RUNTIME_DIR"
+          ctest --test-dir build/debug --output-on-failure
+      - name: clang-format
+        run: clang-format --dry-run --Werror src/*.c src/*.h tests/*.c scripts/screenshot_helper.c
+      - name: clang-tidy
+        run: clang-tidy -p build/debug src/*.c tests/*.c
+      - name: shellcheck
+        run: shellcheck scripts/*.sh tests/*.sh
+      - name: Portability check
+        run: ./scripts/check-portability.sh
+      - name: Dead-code check
+        run: ./scripts/check-dead-code.sh build/debug
+
+  asan:
+    name: Tests under ASan + UBSan
+    runs-on: ubuntu-latest
+    container: ubuntu:26.04
+    steps:
+      - name: Install dependencies
+        run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
+      - uses: actions/checkout@v4
+      - name: Trust the checkout (container runs as root)
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Build
+        run: cmake --preset asan && cmake --build --preset asan -j"$(nproc)"
+      - name: Test
+        env:
+          XDG_RUNTIME_DIR: /tmp/xdg-runtime
+        run: |
+          mkdir -p -m 700 "$XDG_RUNTIME_DIR"
+          ctest --preset asan
+
+  fuzz:
+    name: Fuzz the parser (2 minutes)
+    runs-on: ubuntu-latest
+    container: ubuntu:26.04
+    steps:
+      - name: Install dependencies
+        run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
+      - uses: actions/checkout@v4
+      - name: Trust the checkout (container runs as root)
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Build
+        run: cmake --preset fuzz && cmake --build --preset fuzz -j"$(nproc)"
+      - name: Fuzz
+        run: |
+          mkdir -p build/fuzz/corpus build/fuzz/artifacts
+          build/fuzz/tests/fuzz_parser -max_total_time=120 \
+            -artifact_prefix=build/fuzz/artifacts/ build/fuzz/corpus tests/fuzz_corpus
+      - name: Keep any failing input
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-artifacts
+          path: build/fuzz/artifacts/
+
+  windows:
+    name: Windows zip (MinGW cross-build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the zip in the MinGW container
+        run: scripts/windows-podman.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: adifedit-windows-x86_64
+          path: build/windows/adifedit-*-windows-x86_64.zip

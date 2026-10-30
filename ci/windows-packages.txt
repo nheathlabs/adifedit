@@ -1,0 +1,13 @@
+# Fedora packages for the Windows (MinGW) cross-build, one per line.
+# Read by ci/Containerfile and, later, the CI job - keep them in step here.
+cmake
+git
+glib2-devel
+icoutils
+mingw64-adwaita-icon-theme
+mingw64-gcc
+mingw64-gtk4
+mingw64-hicolor-icon-theme
+mingw64-librsvg2
+ninja-build
+zip

@@ -38,16 +38,23 @@ static void spin_for(guint ms) {
     }
 }
 
-/* The cell widget under the middle of `scrolled`'s viewport. */
+/* A cell widget in the middle of `scrolled`'s viewport. The theme pads the
+ * rows, so the exact centre can fall between two cells: look down from there
+ * until something is a cell. */
 static GtkWidget *cell_in_view(GtkWidget *scrolled) {
     double x = gtk_widget_get_width(scrolled) / 2.0;
     double y = gtk_widget_get_height(scrolled) / 2.0;
-    GtkWidget *hit = gtk_widget_pick(scrolled, x, y, GTK_PICK_DEFAULT);
-    while (hit != NULL && !gtk_widget_has_css_class(hit, "adif-cell")) {
-        hit = gtk_widget_get_parent(hit);
+    for (int dy = 0; dy < 100; dy++) {
+        GtkWidget *hit = gtk_widget_pick(scrolled, x, y + dy, GTK_PICK_DEFAULT);
+        while (hit != NULL && !gtk_widget_has_css_class(hit, "adif-cell")) {
+            hit = gtk_widget_get_parent(hit);
+        }
+        if (hit != NULL) {
+            return hit;
+        }
     }
-    g_assert_nonnull(hit);
-    return hit;
+    g_assert_not_reached();
+    return NULL;
 }
 
 static AdifDocument *wide_document(void) {

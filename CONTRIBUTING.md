@@ -67,9 +67,10 @@ need neither note.
 
 ## Before you push
 
-CI (`.github/workflows/ci.yml`) runs all of these on every push and
-pull request, but there is no pre-commit hook, so run them yourself
-first:
+CI (`.github/workflows/ci.yml`) runs all of these, and every CI job
+must pass before a pull request can merge into `master`. CI doesn't run
+on its own: the maintainer starts it on a pull request's branch. There
+is no pre-commit hook either, so run them yourself first:
 
 ```sh
 cmake --preset debug && cmake --build --preset debug

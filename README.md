@@ -11,8 +11,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
 adifedit began as a way to get to know `Claude Code`. My goal was to build
 something I genuinely needed, and then use it for real.
 
-I don't expect this to be "the perfect way" to do this but I did want this
-to be something I would use and solve the problems I have with ADIF logs.
+It isn't meant to be "the perfect way" to handle ADIF logs. It's meant to
+solve the problems I have with mine, and I use it myself.
 
 As with all FOSS, the GPL's warning really is the case:
 

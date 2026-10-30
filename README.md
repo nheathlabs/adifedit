@@ -8,8 +8,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 ## My experiment with Claude Code.
 
-adifedit began as a goal to familiarize myself with `Claude Code` and see
-if I could create something I needed and would use...and actually use it.
+adifedit began as a way to get to know `Claude Code`. My goal was to build
+something I genuinely needed, and then use it for real.
 
 I don't expect this to be "the perfect way" to do this but I did want this
 to be something I would use and solve the problems I have with ADIF logs.

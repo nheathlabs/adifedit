@@ -230,6 +230,22 @@ if(NOT WIN32)
     install(FILES assets/icons/hicolor/scalable/apps/io.github.nheathlabs.adifedit.svg
             DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 
+    # Package docs: a copyright file and a gzipped changelog, which Debian
+    # policy (and lintian) expect under share/doc/<package>.
+    find_program(GZIP_PROGRAM gzip)
+    if(GZIP_PROGRAM)
+        add_custom_command(
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/changelog.gz
+            COMMAND ${GZIP_PROGRAM} -9nc ${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG.md
+                    > ${CMAKE_CURRENT_BINARY_DIR}/changelog.gz
+            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG.md
+            VERBATIM)
+        add_custom_target(changelog_gz ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/changelog.gz)
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/changelog.gz
+                DESTINATION ${CMAKE_INSTALL_DOCDIR})
+    endif()
+    install(FILES cmake/copyright DESTINATION ${CMAKE_INSTALL_DOCDIR})
+
     # Post-install database refreshes (best effort; skipped when staging into
     # a package root via DESTDIR, where the packager runs them instead).
     # \${CMAKE_INSTALL_PREFIX} is resolved at install time, so this honours a
@@ -264,7 +280,7 @@ if(NOT WIN32)
     set(CPACK_PACKAGE_HOMEPAGE_URL https://github.com/nheathlabs/adifedit)
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "View and edit ham radio ADIF logs")
     set(CPACK_PACKAGE_DESCRIPTION
-        "adifedit is a GTK 4 viewer and editor for ADIF (.adi / .adif) logs: an editable grid with undo/redo, find and replace, and batch stamping of fields into every record.")
+        "adifedit is a GTK 4 viewer and editor for ADIF (.adi / .adif) logs:\nan editable grid with undo/redo, find and replace, and batch stamping of\nfields into every record.")
     set(CPACK_PACKAGING_INSTALL_PREFIX /usr)
     set(CPACK_STRIP_FILES ON)
     set(CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS

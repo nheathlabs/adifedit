@@ -25,13 +25,8 @@ nothing to report about those.
 
 ## Reporting
 
-Please report privately, not in a public issue. Use GitHub's
-[private vulnerability reporting](https://github.com/nheathlabs/adifedit/security/advisories/new)
-(the repository's **Security** tab → **Report a vulnerability**).
+Open an issue, or better yet a pull request with a fix.
 
 Include the adifedit version (**Help → About**, or `adifedit --version`),
 your OS, and, if you can, a minimal file that triggers the problem.
-Remove any personal data from a real log before you send it.
-
-You should get a reply within two weeks. Once a fix is released, the
-advisory is published, with credit to you unless you'd rather not.
+Remove any personal data from a real log before you share it.

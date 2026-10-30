@@ -33,12 +33,12 @@ env:
 jobs:
   linux:
     name: Linux build, tests and checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     container: ubuntu:26.04
     steps:
       - name: Install dependencies
         run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trust the checkout (container runs as root)
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build
@@ -62,12 +62,12 @@ jobs:
 
   asan:
     name: Tests under ASan + UBSan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     container: ubuntu:26.04
     steps:
       - name: Install dependencies
         run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trust the checkout (container runs as root)
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build
@@ -81,12 +81,12 @@ jobs:
 
   fuzz:
     name: Fuzz the parser (2 minutes)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     container: ubuntu:26.04
     steps:
       - name: Install dependencies
         run: apt-get update && apt-get install -y --no-install-recommends ca-certificates $APT_PACKAGES
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trust the checkout (container runs as root)
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build
@@ -98,19 +98,72 @@ jobs:
             -artifact_prefix=build/fuzz/artifacts/ build/fuzz/corpus tests/fuzz_corpus
       - name: Keep any failing input
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: fuzz-artifacts
           path: build/fuzz/artifacts/
 
+  deb:
+    name: Debian package
+    runs-on: ubuntu-26.04
+    container: ubuntu:26.04
+    steps:
+      - name: Install dependencies
+        run: apt-get update && apt-get install -y --no-install-recommends ca-certificates dpkg-dev lintian $APT_PACKAGES
+      - uses: actions/checkout@v7
+      - name: Trust the checkout (container runs as root)
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Build
+        run: cmake --preset release && cmake --build --preset release -j"$(nproc)"
+      - name: Package
+        run: cd build/release && cpack
+      - name: Inspect the package
+        run: |
+          deb=$(ls build/release/adifedit_*.deb)
+          dpkg-deb --info "$deb"
+          dpkg-deb --contents "$deb"
+          depends=$(dpkg-deb --field "$deb" Depends)
+          test -n "$depends"
+          dpkg-deb --contents "$deb" | grep -q ' ./usr/bin/adifedit$'
+      - name: Lintian
+        run: lintian --fail-on error build/release/adifedit_*.deb
+      - name: Install and check it resolves
+        run: |
+          apt-get install -y ./build/release/adifedit_*.deb
+          ! ldd /usr/bin/adifedit | grep 'not found'
+          desktop-file-validate /usr/share/applications/io.github.nheathlabs.adifedit.desktop
+          appstreamcli validate --no-net /usr/share/metainfo/io.github.nheathlabs.adifedit.metainfo.xml
+      - uses: actions/upload-artifact@v7
+        with:
+          name: adifedit-deb
+          path: build/release/adifedit_*.deb
+
+  deb-install:
+    name: Debian package installs on a bare system
+    needs: deb
+    runs-on: ubuntu-26.04
+    container: ubuntu:26.04
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: adifedit-deb
+      - name: Install only the package
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends ./adifedit_*.deb
+      - name: Check that it resolves
+        run: |
+          ! ldd /usr/bin/adifedit | grep 'not found'
+          test -x /usr/bin/adifedit
+
   windows:
     name: Windows zip (MinGW cross-build)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build the zip in the MinGW container
         run: scripts/windows-podman.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: adifedit-windows-x86_64
           path: build/windows/adifedit-*-windows-x86_64.zip

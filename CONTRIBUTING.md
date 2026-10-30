@@ -431,8 +431,12 @@ through the same checks, so a saved input stays fixed on every
 4. Build the Windows zip from that commit, with the library sources the
    LGPL asks for: `scripts/windows-podman.sh --with-sources` (see the
    README's [Windows build](README.md#windows-build)).
-5. Push the tag, then create a GitHub release for it. Attach:
-   - the zip, plus `sha256sum` output for it;
+5. Build the Debian package from a release build: `cmake --preset release &&
+   cmake --build --preset release && (cd build/release && cpack)`
+   writes `build/release/adifedit_x.y.z_amd64.deb`. CI's `deb` job does the
+   same and lints it, so the pushed commit's artifact can be attached.
+6. Push the tag, then create a GitHub release for it. Attach:
+   - the zip and the `.deb`, plus `sha256sum` output for them;
    - the `-sources/` folder, as one archive.
 
    Use the `CHANGELOG.md` entry as the release text, and keep its note

@@ -21,8 +21,10 @@ status_file=$(mktemp)
 trap 'rm -f "$status_file"' EXIT
 export TEST_BIN=$test_bin STATUS_FILE=$status_file
 
+# GTK_A11Y=none: a bare container has no accessibility bus, and GTK's
+# warning about that is fatal under g_test.
 # shellcheck disable=SC2016
-WLR_BACKENDS=headless WLR_RENDERER=pixman WLR_LIBINPUT_NO_DEVICES=1 \
+GTK_A11Y=none WLR_BACKENDS=headless WLR_RENDERER=pixman WLR_LIBINPUT_NO_DEVICES=1 \
     cage -- sh -c '"$TEST_BIN"; echo $? >"$STATUS_FILE"' 2>/dev/null
 
 status=$(cat "$status_file")

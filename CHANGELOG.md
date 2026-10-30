@@ -11,6 +11,31 @@ Notable changes to adifedit, newest first. The format follows
 follow [Semantic Versioning](https://semver.org/). Each release also has a
 matching `<release>` in `io.github.nheathlabs.adifedit.metainfo.xml`.
 
+## [0.0.2] - 2026-10-29
+
+### Added
+
+- A Debian package (`adifedit_0.0.2_amd64.deb`) for Ubuntu and Debian,
+  with its library dependencies worked out at build time, a copyright
+  file and a changelog.
+- Releases are built by CI from the version tag: the Windows zip and
+  its library sources, the `.deb`, and `SHA256SUMS`.
+
+### Changed
+
+- Security issues are reported through GitHub issues or pull requests,
+  not private advisories.
+
+### Known limitations
+
+- The Windows `.exe` is not code-signed, so SmartScreen warns on first
+  run. Choose "More info" → "Run anyway".
+- Windows has no installer, Start-menu entry or `.adi` file association.
+  Unzip the folder and run `bin\adifedit.exe`.
+- The test suite runs on Linux only.
+- Not yet available: importing an ADIF file into the open log, and
+  exporting selected rows as a new file.
+
 ## [0.0.1] - 2026-10-15
 
 First public release.

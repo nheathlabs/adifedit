@@ -1,0 +1,136 @@
+# adifedit - a GTK4 viewer and editor for ham radio ADIF logs.
+# Copyright (C) 2026 Nicholas Heath
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Pushing a vX.Y.Z tag builds the release files and creates a draft
+# GitHub release with them, for review and publishing by hand. A manual
+# run (workflow_dispatch) builds the same files without a release.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+  # Same build dependencies as ci.yml.
+  APT_PACKAGES: >-
+    git build-essential gcc cmake pkg-config libgtk-4-dev libglib2.0-dev-bin
+    librsvg2-bin clang libclang-rt-dev clang-format clang-tidy shellcheck
+    appstream desktop-file-utils cage
+
+jobs:
+  check:
+    name: Version, tag and changelog agree
+    runs-on: ubuntu-26.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Read the version
+        id: version
+        run: |
+          version=$(sed -n 's/^project(adifedit VERSION \([0-9.]*\) .*/\1/p' CMakeLists.txt)
+          test -n "$version"
+          echo "version=$version" >>"$GITHUB_OUTPUT"
+          if [ "$GITHUB_REF_TYPE" = tag ] && [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match CMakeLists.txt version $version"
+            exit 1
+          fi
+      - name: Release notes from CHANGELOG.md
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          awk -v v="$VERSION" '
+            index($0, "## [" v "]") == 1 { on = 1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md >notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "::error::CHANGELOG.md has no entry for $VERSION"
+            exit 1
+          fi
+          grep -q "release version=\"$VERSION\"" io.github.nheathlabs.adifedit.metainfo.xml || {
+            echo "::error::metainfo has no <release> for $VERSION"
+            exit 1
+          }
+      - uses: actions/upload-artifact@v7
+        with:
+          name: notes
+          path: notes.md
+
+  deb:
+    name: Debian package
+    needs: check
+    runs-on: ubuntu-26.04
+    container: ubuntu:26.04
+    steps:
+      - name: Install dependencies
+        run: apt-get update && apt-get install -y --no-install-recommends ca-certificates dpkg-dev lintian $APT_PACKAGES
+      - uses: actions/checkout@v7
+      - name: Trust the checkout (container runs as root)
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Build
+        run: cmake --preset release && cmake --build --preset release -j"$(nproc)"
+      - name: Package
+        run: cd build/release && cpack
+      - name: Lintian
+        run: lintian --fail-on error build/release/adifedit_*.deb
+      - uses: actions/upload-artifact@v7
+        with:
+          name: deb
+          path: build/release/adifedit_*.deb
+
+  windows:
+    name: Windows zip and library sources
+    needs: check
+    runs-on: ubuntu-26.04
+    env:
+      VERSION: ${{ needs.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build the zip in the MinGW container
+        run: scripts/windows-podman.sh --with-sources
+      - name: Archive the library sources
+        run: |
+          cd build/windows
+          tar -czf "adifedit-$VERSION-windows-x86_64-sources.tar.gz" \
+            "adifedit-$VERSION-windows-x86_64-sources"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows
+          path: |
+            build/windows/adifedit-${{ env.VERSION }}-windows-x86_64.zip
+            build/windows/adifedit-${{ env.VERSION }}-windows-x86_64-sources.tar.gz
+
+  publish:
+    name: Draft GitHub release
+    if: github.ref_type == 'tag'
+    needs: [check, deb, windows]
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.check.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: |
+          cd dist
+          sha256sum adifedit* >SHA256SUMS
+          cat SHA256SUMS
+      - name: Create the draft release
+        run: |
+          cd dist
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft \
+            --verify-tag --title "adifedit $VERSION" --notes-file notes.md \
+            adifedit* SHA256SUMS

@@ -420,25 +420,3 @@ Every other build compiles the same file with a small `main()` instead
 of libFuzzer. The `fuzz_corpus` ctest then replays `tests/fuzz_corpus/`
 through the same checks, so a saved input stays fixed on every
 `ctest` run and in CI, with no clang needed.
-
-## Releasing
-
-1. Bump `project(... VERSION x.y.z)` in `CMakeLists.txt`.
-2. Add the release to `CHANGELOG.md` and a matching `<release>` to
-   `io.github.nheathlabs.adifedit.metainfo.xml` (`ctest` validates the
-   metainfo).
-3. Commit, with a clean tree, then tag it: `git tag -a vx.y.z -m "adifedit x.y.z"`.
-4. Build the Windows zip from that commit, with the library sources the
-   LGPL asks for: `scripts/windows-podman.sh --with-sources` (see the
-   README's [Windows build](README.md#windows-build)).
-5. Build the Debian package from a release build: `cmake --preset release &&
-   cmake --build --preset release && (cd build/release && cpack)`
-   writes `build/release/adifedit_x.y.z_amd64.deb`. CI's `deb` job does the
-   same and lints it, so the pushed commit's artifact can be attached.
-6. Push the tag, then create a GitHub release for it. Attach:
-   - the zip and the `.deb`, plus `sha256sum` output for them;
-   - the `-sources/` folder, as one archive.
-
-   Use the `CHANGELOG.md` entry as the release text, and keep its note
-   that the Windows `.exe` is unsigned (SmartScreen will warn on first
-   run).

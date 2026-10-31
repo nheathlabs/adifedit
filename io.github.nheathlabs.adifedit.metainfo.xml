@@ -90,6 +90,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="0.0.3" date="2026-10-30">
+      <description>
+        <p>Adds a Windows installer with a Start menu entry and .adi/.adif file association.</p>
+      </description>
+    </release>
     <release version="0.0.2" date="2026-10-29">
       <description>
         <p>Adds a Debian package for Ubuntu and Debian.</p>

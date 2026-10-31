@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 cmake_minimum_required(VERSION 3.25)
-project(adifedit VERSION 0.0.2 LANGUAGES C)
+project(adifedit VERSION 0.0.3 LANGUAGES C)
 
 # --- Build type ------------------------------------------------------
 # Single-config generators (Make, Ninja) build exactly one type. Use the

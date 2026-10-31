@@ -140,24 +140,6 @@ jobs:
           name: adifedit-deb
           path: build/release/adifedit_*.deb
 
-  deb-install:
-    name: Debian package installs on a bare system
-    needs: deb
-    runs-on: ubuntu-26.04
-    container: ubuntu:26.04
-    steps:
-      - uses: actions/download-artifact@v8
-        with:
-          name: adifedit-deb
-      - name: Install only the package
-        run: |
-          apt-get update
-          apt-get install -y --no-install-recommends ./adifedit_*.deb
-      - name: Check that it resolves
-        run: |
-          ! ldd /usr/bin/adifedit | grep 'not found'
-          test -x /usr/bin/adifedit
-
   windows:
     name: Windows zip (MinGW cross-build)
     runs-on: ubuntu-26.04

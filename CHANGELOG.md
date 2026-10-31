@@ -13,6 +13,8 @@ matching `<release>` in `io.github.nheathlabs.adifedit.metainfo.xml`.
 
 ## [Unreleased]
 
+## [0.0.3] - 2026-10-30
+
 ### Added
 
 - A Windows installer (`adifedit-x.y.z-windows-x86_64_setup.exe`), for
@@ -23,6 +25,14 @@ matching `<release>` in `io.github.nheathlabs.adifedit.metainfo.xml`.
 
 - The Windows zip is now named
   `adifedit-x.y.z-windows-x86_64_portable.zip`.
+
+### Known limitations
+
+- The Windows installer and `.exe` are not code-signed, so SmartScreen
+  warns on first run. Choose "More info" → "Run anyway".
+- The test suite runs on Linux only.
+- Not yet available: importing an ADIF file into the open log, and
+  exporting selected rows as a new file.
 
 ## [0.0.2] - 2026-10-29
 

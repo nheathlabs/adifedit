@@ -61,8 +61,8 @@ no network, no daemon, no fuss.
 - ✅ Threaded load / save; prompts before you lose unsaved changes, and
   before saving over a log another program (a logger) has changed since
   it was opened
-- ✅ Runs on Linux and 64-bit Windows; the portable Windows zip is
-  cross-built from Linux ([Windows build](#windows-build))
+- ✅ Runs on Linux and 64-bit Windows; the Windows installer and
+  portable zip are cross-built from Linux ([Windows build](#windows-build))
 
 Planned: importing an ADIF file into the open log, and exporting selected
 rows as a new ADIF file. Release history is in
@@ -510,16 +510,27 @@ runs reuse it. The output is:
 | Output | What it is |
 |---|---|
 | `build/windows/package/adifedit/` | the bundle: `bin/adifedit.exe`, the GTK DLLs, `share/` (GSettings schemas, icon theme, the starter stamp, licences), `source/` and `THIRD-PARTY-NOTICES.txt` |
-| `build/windows/adifedit-<version>-windows-x86_64.zip` | the same, zipped |
+| `build/windows/adifedit-<version>-windows-x86_64_portable.zip` | the same, zipped |
+| `build/windows/adifedit-<version>-windows-x86_64_setup.exe` | the same, as an installer (`packaging/windows/adifedit.nsi`, built with NSIS) |
 | `build/windows/adifedit-<version>-windows-x86_64-sources/` | only with `--with-sources`: the bundled libraries' source RPMs, plus `SHA256SUMS` (about 250 MB) |
 
 Like the Linux builds, it all stays under `build/`. Deleting
-`build/windows` removes the zip too, so copy it elsewhere to keep it.
-The bare `build/windows/adifedit.exe` won't run on its own on Windows;
-use the bundle or the zip.
+`build/windows` removes the zip and installer too, so copy them elsewhere
+to keep them. The bare `build/windows/adifedit.exe` won't run on its own
+on Windows; use the bundle, the portable zip or the installer.
 
-To install on Windows, unzip anywhere and run `bin\adifedit.exe`; there's
-no installer. To remove it, delete the folder.
+There are two ways to install on Windows:
+
+- **Installer** (`_setup.exe`): asks whether to install for all users
+  (Program Files, needs admin) or just you (`%LOCALAPPDATA%\Programs`, no
+  admin). It adds a Start-menu entry and offers adifedit for `.adi` and
+  `.adif` files: in *Open with* always, and as the default only when no
+  other program has claimed the extension. Remove it from *Apps &
+  features* (or *Add or remove programs*); that removes the files, the
+  shortcut and the file association.
+- **Portable zip** (`_portable.zip`): unzip anywhere and run
+  `bin\adifedit.exe`. Nothing is registered with Windows; to remove it,
+  delete the folder.
 
 What the bundle holds, and why each part is there:
 
@@ -548,11 +559,12 @@ cmake --preset windows && cmake --build --preset windows
 The preset also works on a Fedora machine with the packages from
 `ci/windows-packages.txt` installed.
 
-- **Publishing a release:** the zip meets its licences' notice
-  requirements by itself. The LGPL libraries (GTK, GLib, Pango, cairo and
-  others) also require their source to be available from wherever the
-  zip is, so build with `scripts/windows-podman.sh --with-sources` and
-  publish the `-sources/` folder next to the zip. The notices also give
+- **Publishing a release:** the zip and the installer meet their
+  licences' notice requirements by themselves. The LGPL libraries (GTK,
+  GLib, Pango, cairo and others) also require their source to be
+  available from wherever the binaries are, so build with
+  `scripts/windows-podman.sh --with-sources` and publish the `-sources/`
+  folder next to them. The notices also give
   each source RPM's URL on Fedora's build system. Build releases from a
   clean commit: with uncommitted changes, the build warns and says so in
   the notices, because `source/` holds only what's committed.
@@ -562,11 +574,10 @@ The preset also works on a Fedora machine with the packages from
   After changing `ci/windows-packages.txt`, the next run rebuilds the
   image by itself.
 - **Not done yet:**
-  - there's no installer, Start-menu entry or `.adi` file association;
-  - the `.exe` isn't code-signed, so Windows SmartScreen may warn on first
-    run;
-  - the tests aren't run for Windows. CI builds the zip, but doesn't run
-    it.
+  - neither the `.exe` nor the installer is code-signed, so Windows
+    SmartScreen may warn on first run;
+  - the tests aren't run for Windows. CI builds the zip and installer,
+    but doesn't run them.
 
 ---
 

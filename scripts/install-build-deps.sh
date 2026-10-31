@@ -104,6 +104,6 @@ cat <<'EOF'
     Install / uninstall system-wide (from a build dir):
       sudo cmake --install build/release --strip
       sudo cmake --build build/release --target uninstall
-    Windows zip (cross-built in a container):
-      scripts/windows-podman.sh                                     # ./build/windows/*.zip
+    Windows portable zip and installer (cross-built in a container):
+      scripts/windows-podman.sh                                     # ./build/windows/*_portable.zip, *_setup.exe
 EOF

@@ -11,6 +11,19 @@ Notable changes to adifedit, newest first. The format follows
 follow [Semantic Versioning](https://semver.org/). Each release also has a
 matching `<release>` in `io.github.nheathlabs.adifedit.metainfo.xml`.
 
+## [Unreleased]
+
+### Added
+
+- A Windows installer (`adifedit-x.y.z-windows-x86_64_setup.exe`), for
+  all users or just the current one, with a Start-menu entry, `.adi` /
+  `.adif` file association and an uninstaller in Apps & features.
+
+### Changed
+
+- The Windows zip is now named
+  `adifedit-x.y.z-windows-x86_64_portable.zip`.
+
 ## [0.0.2] - 2026-10-29
 
 ### Added

@@ -87,14 +87,14 @@ jobs:
           path: build/release/adifedit_*.deb
 
   windows:
-    name: Windows zip and library sources
+    name: Windows portable zip, installer and library sources
     needs: check
     runs-on: ubuntu-26.04
     env:
       VERSION: ${{ needs.check.outputs.version }}
     steps:
       - uses: actions/checkout@v7
-      - name: Build the zip in the MinGW container
+      - name: Build the zip and installer in the MinGW container
         run: scripts/windows-podman.sh --with-sources
       - name: Archive the library sources
         run: |
@@ -105,7 +105,8 @@ jobs:
         with:
           name: windows
           path: |
-            build/windows/adifedit-${{ env.VERSION }}-windows-x86_64.zip
+            build/windows/adifedit-${{ env.VERSION }}-windows-x86_64_portable.zip
+            build/windows/adifedit-${{ env.VERSION }}-windows-x86_64_setup.exe
             build/windows/adifedit-${{ env.VERSION }}-windows-x86_64-sources.tar.gz
 
   publish:

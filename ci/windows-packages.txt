@@ -9,5 +9,6 @@ mingw64-gcc
 mingw64-gtk4
 mingw64-hicolor-icon-theme
 mingw64-librsvg2
+mingw32-nsis
 ninja-build
 zip

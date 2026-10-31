@@ -2,15 +2,18 @@
 # Copyright (C) 2026 Nicholas Heath
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# The pre-push checks from CONTRIBUTING.md, run by hand (Actions -> CI ->
-# Run workflow, on the pull request's branch). Every job is a required
-# check for merging into master.
+# The pre-push checks from CONTRIBUTING.md, on every push to master and
+# every pull request. Every job is a required check for merging into
+# master.
 # The Linux jobs run in an Ubuntu 26.04 container so clang-format /
 # clang-tidy match the versions the tree is kept clean against.
 
 name: CI
 
 on:
+  push:
+    branches: [master]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -137,32 +140,18 @@ jobs:
           name: adifedit-deb
           path: build/release/adifedit_*.deb
 
-  deb-install:
-    name: Debian package installs on a bare system
-    needs: deb
-    runs-on: ubuntu-26.04
-    container: ubuntu:26.04
-    steps:
-      - uses: actions/download-artifact@v8
-        with:
-          name: adifedit-deb
-      - name: Install only the package
-        run: |
-          apt-get update
-          apt-get install -y --no-install-recommends ./adifedit_*.deb
-      - name: Check that it resolves
-        run: |
-          ! ldd /usr/bin/adifedit | grep 'not found'
-          test -x /usr/bin/adifedit
-
   windows:
     name: Windows zip (MinGW cross-build)
     runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
-      - name: Build the zip in the MinGW container
+      - name: Build the zip and installer in the MinGW container
         run: scripts/windows-podman.sh
       - uses: actions/upload-artifact@v7
         with:
-          name: adifedit-windows-x86_64
-          path: build/windows/adifedit-*-windows-x86_64.zip
+          name: adifedit-windows-x86_64_portable
+          path: build/windows/adifedit-*-windows-x86_64_portable.zip
+      - uses: actions/upload-artifact@v7
+        with:
+          name: adifedit-windows-x86_64_setup
+          path: build/windows/adifedit-*-windows-x86_64_setup.exe

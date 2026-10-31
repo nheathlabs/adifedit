@@ -5,10 +5,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Cross-build adifedit for 64-bit Windows and bundle it, with the GTK
-# runtime it needs, into a portable zip:
+# runtime it needs, into a portable zip and an installer:
 #
-#   build/windows/package/adifedit/                     the bundle (bin/adifedit.exe ...)
-#   build/windows/adifedit-VERSION-windows-x86_64.zip   the same, zipped
+#   build/windows/package/adifedit/                              the bundle (bin/adifedit.exe ...)
+#   build/windows/adifedit-VERSION-windows-x86_64_portable.zip   the same, zipped
+#   build/windows/adifedit-VERSION-windows-x86_64_setup.exe      the same, as an installer
+#                                                                (packaging/windows/adifedit.nsi)
 #
 # The bundle carries what its licences ask for: THIRD-PARTY-NOTICES.txt
 # (every bundled package, its licence and its source), each package's
@@ -189,7 +191,7 @@ declare -A srpm_urls=() # source RPM file name -> its Koji URL
     printf '  Source line, on Fedora'"'"'s build system (Koji).\n'
     if ((with_sources)); then
         printf '\n  The same source RPMs are also published as a separate download next\n'
-        printf '  to this zip (they are not inside it): the folder\n'
+        printf '  to this download (they are not inside it): the folder\n'
         printf '  adifedit-%s-windows-x86_64-sources/.\n' "$version"
     fi
     printf '\nCredits\n\n'
@@ -213,10 +215,30 @@ while read -r file; do
 done < <(find "$bundle" -name '*.exe' -o -name '*.dll')
 ((missing == 0)) || exit 1
 
-zipfile=$build/adifedit-$version-windows-x86_64.zip
+zipfile=$build/adifedit-$version-windows-x86_64_portable.zip
 rm -f "$zipfile"
 (cd "$package" && zip -qr "$root/$zipfile" adifedit)
 echo "wrote $zipfile"
+
+# --- The installer ----------------------------------------------------
+
+# The uninstaller removes the bundle's top-level entries by name rather
+# than the whole install directory, in case that is shared.
+uninstlist=$package/uninstall-list.nsh
+# shellcheck disable=SC2016  # $INSTDIR is NSIS's, expanded by the uninstaller
+while read -r entry; do
+    if [[ -d $bundle/$entry ]]; then
+        printf 'RMDir /r "$INSTDIR\\%s"\n' "$entry"
+    else
+        printf 'Delete "$INSTDIR\\%s"\n' "$entry"
+    fi
+done < <(cd "$bundle" && find . -mindepth 1 -maxdepth 1 -printf '%P\n' | sort) >"$uninstlist"
+
+setupfile=$build/adifedit-$version-windows-x86_64_setup.exe
+makensis -V2 -DVERSION="$version" -DSRCDIR="$root" -DBUNDLE="$root/$bundle" \
+    -DUNINSTLIST="$root/$uninstlist" -DOUTFILE="$root/$setupfile" \
+    packaging/windows/adifedit.nsi
+echo "wrote $setupfile"
 
 # --- The libraries' source RPMs (--with-sources) ---------------------
 

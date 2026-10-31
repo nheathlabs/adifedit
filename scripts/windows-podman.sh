@@ -4,11 +4,12 @@
 # Copyright (C) 2026 Nicholas Heath
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Build the Windows zip from this (Linux) host: runs scripts/build-windows.sh
+# Build the Windows zip and installer from this (Linux) host: runs scripts/build-windows.sh
 # in the Fedora MinGW container of ci/Containerfile, with rootless podman.
 # The image is built on first use and cached after that.
 #
-#   scripts/windows-podman.sh                  ->  build/windows/adifedit-VERSION-windows-x86_64.zip
+#   scripts/windows-podman.sh                  ->  build/windows/adifedit-VERSION-windows-x86_64_portable.zip
+#                                                  build/windows/adifedit-VERSION-windows-x86_64_setup.exe
 #   scripts/windows-podman.sh --with-sources   ... plus the libraries' source RPMs
 #                                                  (see scripts/build-windows.sh)
 #
